@@ -1,7 +1,0 @@
-{
-  "generator-react-webpack": {
-    "appName": "socialObserver",
-    "style": "less",
-    "postcss": false
-  }
-}
