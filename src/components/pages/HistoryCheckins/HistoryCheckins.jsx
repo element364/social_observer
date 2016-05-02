@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { Map, Marker, Popup, TileLayer, Circle } from 'react-leaflet';
+import FontAwesome from 'react-fontawesome';
 import moment from 'moment';
 import $ from 'jquery';
 
@@ -50,7 +51,7 @@ class HistoryCheckins extends Component {
                         user_name: item.user.username,
                         user_image_url: item.user.profile_picture
                     }))
-                }, () => { debugger; });
+                });
             } 
         });
     }
@@ -134,7 +135,13 @@ class HistoryCheckins extends Component {
                                 <div className="col-xs-3 col-sm-3 col-md-3">
                                     <div className="row">
                                         <div style={{ float: 'left' }}>
-                                            <img height="25" src="http://static.parastorage.com/media/75a799_583bef29630244abb896648f080b2f4d.png" />
+                                            <FontAwesome
+                                                className='super-crazy-colors'
+                                                name='instagram'
+                                                size='2x'
+                                                spin
+                                                style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)' }}
+                                            />
                                         </div>
                                         <h4>{checkin.user_name}</h4>
                                     </div>
