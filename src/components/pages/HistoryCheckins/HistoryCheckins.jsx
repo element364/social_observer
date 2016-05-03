@@ -3,13 +3,9 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { Map, Marker, Popup, TileLayer, Circle } from 'react-leaflet';
 import FontAwesome from 'react-fontawesome';
-import moment from 'moment';
-import $ from 'jquery';
+import InstagramApi from '../../../utils/instagramApi';
 
 require('./history-checkin.less');
-
-const instagram_client_id = '56b5e75fc8124dfba12aa25af2faae18';
-const instagram_client_secret = 'e1c3bfd6dfb7422ba4d9532b6eca1339';
 
 class HistoryCheckins extends Component {
     constructor(props) {
@@ -18,45 +14,18 @@ class HistoryCheckins extends Component {
         this.state = {
             currentPosition: [51.505, -0.09],
             selectedLocation: [51.505, -0.09],
-            checkins: []  
+            checkins: []
         };
         
-        this.searchInstagramCheckins = this.searchInstagramCheckins.bind(this);
-        this.loadMoreCheckins = this.loadMoreCheckins.bind(this);
-        this.mapClickHandler = this.mapClickHandler.bind(this);
+        this.instagramApi = new InstagramApi();
     }
     
-    searchInstagramCheckins(lat, lng, max_timestamp = null) {
-        $.ajax({
-            url: 'https://api.instagram.com/v1/media/search',
-            data: {
-                lat, lng,
-                max_timestamp,
-                distance: 800,
-                client_id: instagram_client_id
-            },
-            type: 'get',
-            dataType: 'jsonp',
-            success: r => {
-                console.log(r);
-                this.setState({
-                    checkins: r.data.map(item => ({
-                        lat: item.location.latitude,
-                        lng: item.location.longitude,
-                        created_time: item.created_time,
-                        moment_created_time: moment(item.created_time, 'X'),
-                        image_url: item.images.standard_resolution.url,
-                        text: (item.caption && item.caption.text) || '',
-                        link: item.link,
-                        user_name: item.user.username,
-                        user_image_url: item.user.profile_picture
-                    }))
-                });
-            } 
-        });
-    }
+    searchInstagramCheckins = (lat, lng, max_timestamp) => {
+        this.instagramApi.findCheckins({ lat, lng, max_timestamp })
+            .then(checkins => this.setState({ checkins }));
+    };
     
-    loadMoreCheckins() {
+    loadMoreCheckins = () => {
         const minTimestamp = this.state.checkins.reduce((minTS, checkin) => {
             return Math.min(minTS, checkin.created_time)
         }, 9999999999);
@@ -65,20 +34,22 @@ class HistoryCheckins extends Component {
             this.state.selectedLocation[0], this.state.selectedLocation[1],
             minTimestamp
         );
-    }
+    };
     
     componentDidMount() {
         navigator.geolocation.getCurrentPosition(p => {
+            const position = [p.coords.latitude, p.coords.longitude];
+            
             this.setState({
-                currentPosition: [p.coords.latitude, p.coords.longitude],
-                selectedLocation: [p.coords.latitude, p.coords.longitude]
+                currentPosition: position,
+                selectedLocation: position
             });
             
             this.searchInstagramCheckins(p.coords.latitude, p.coords.longitude);
         });
     }
     
-    mapClickHandler(e) {
+    mapClickHandler = e => {
         console.log('mapClickHandler');
         console.log(e);
         this.setState({
@@ -89,32 +60,33 @@ class HistoryCheckins extends Component {
     }
     
     render() {
-        const { currentPosition, selectedLocation } = this.state;
+        const { currentPosition, selectedLocation, checkins } = this.state;
         
         return (
             <div className="container-fluid">
                 <Link to="/realtime_checkins">Realtime checkins</Link>
                 <div className="row">
                     <div className="leaflet-container">
-                    History checkins
-                    <Map center={currentPosition} zoom={13} onClick={this.mapClickHandler}>
-                        <TileLayer
-                            url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        />
-                        <Circle center={selectedLocation} radius={800}>
-                        </Circle>
-                        {this.state.checkins.map(checkin =>
-                            <Marker position={[checkin.lat, checkin.lng]}>
-                                <Popup>
-                                    <img width="100" height="100" src={checkin.image_url} />
-                                </Popup>
-                            </Marker>)}
-                    </Map>
+                        History checkins
+                        <Map center={currentPosition} zoom={13} onClick={this.mapClickHandler}>
+                            <TileLayer
+                                url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            />
+                            <Circle center={selectedLocation} radius={800}>
+                            </Circle>
+                            {checkins && checkins.map(checkin =>
+                                <Marker position={[checkin.lat, checkin.lng]}>
+                                    <Popup>
+                                        <img width="100" height="100" src={checkin.image_url} />
+                                    </Popup>
+                                </Marker>)}
+                        </Map>
                     </div>
                 </div>
                 <div className="row">
-                    {this.state.checkins.map(checkin =>
+                    <Button onClick={this.loadMoreCheckins}>Еще</Button>
+                    {checkins && checkins.map(checkin =>
                         <div className="well well-sm">
                             <div className="row">
                                 <div className="col-xs-5 col-sm-5 col-md-5">
