@@ -6,6 +6,7 @@ import { Router, Route, hashHistory } from 'react-router';
 import configureStore from './stores';
 import RealtimeCheckins from './components/pages/RealtimeCheckins/RealtimeCheckins.jsx';
 import HistoryCheckins from './components/pages/HistoryCheckins/HistoryCheckins.jsx';
+import User from './components/pages/User/User.jsx';
 
 const store = configureStore();
 
@@ -16,6 +17,7 @@ render(
     <Provider store={store}>
         <Router history={history}>
             <Route path="/realtime_checkins" component={RealtimeCheckins} />
+            <Route path="/user/:user_name" component={User} />
             <Route path="/" component={HistoryCheckins} />
         </Router>
     </Provider>,

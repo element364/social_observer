@@ -115,7 +115,7 @@ class HistoryCheckins extends Component {
                                                 style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)' }}
                                             />
                                         </div>
-                                        <h4>{checkin.user_name}</h4>
+                                        <h4><Link to={`/user/${checkin.user_name}`}>{checkin.user_name}</Link></h4>
                                     </div>
                                     <div className="row" style={{ textAlign: 'center' }}>
                                         <img className="img-circle" style={{ maxWidth: '80%' }} src={checkin.user_image_url} />
