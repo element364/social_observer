@@ -34,6 +34,7 @@ class InstagramApi {
                             thumb_url: item.images.thumbnail.url,
                             text: (item.caption && item.caption.text) || '',
                             link: item.link,
+                            user_id: item.user.id,
                             user_name: item.user.username,
                             user_image_url: item.user.profile_picture
                         }))
