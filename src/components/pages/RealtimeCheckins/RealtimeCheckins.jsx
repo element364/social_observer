@@ -6,7 +6,7 @@ import { Map, Marker, Popup, TileLayer, Circle } from 'react-leaflet';
 import FontAwesome from 'react-fontawesome';
 import InstagramApi from '../../../utils/instagramApi';
 import moment from 'moment';
-import  Notify from 'notifyjs';
+import Notify from 'notifyjs';
 
 require('react-bootstrap-toggle/lib/bootstrap2-toggle.css');
 

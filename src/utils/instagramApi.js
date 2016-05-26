@@ -5,6 +5,36 @@ class InstagramApi {
     constructor() {
         this.clientId = '56b5e75fc8124dfba12aa25af2faae18';
         this.clientSecret = 'e1c3bfd6dfb7422ba4d9532b6eca1339';
+        
+        this.token = '';
+    }
+    
+    getUserInfo(user_id) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `https://api.instagram.com/v1/users/${user_id}/?access_token=${this.token}`,
+                type: 'get',
+                dataType: 'jsonp',
+                success: r => {
+                    console.log(r);
+                    resolve(r.data);
+                }
+            });
+        });
+    }
+    
+    getUserFollowers(user_id) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `https://api.instagram.com/v1/users/${user_id}/followed-by?access_token=${this.token}`,
+                type: 'get',
+                dataType: 'jsonp',
+                success: r => {
+                    console.log(r);
+                    resolve(r.data);
+                }
+            });
+        });
     }
     
     findCheckins(options) {
