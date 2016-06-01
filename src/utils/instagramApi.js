@@ -9,7 +9,10 @@ class InstagramApi {
         this.token = '';
     }
     
-    getUserInfo(user_id) {
+    getUserInfo(options) {
+        const
+            { user_id } = options;
+            
         return new Promise((resolve, reject) => {
             $.ajax({
                 url: `https://api.instagram.com/v1/users/${user_id}/?access_token=${this.token}`,
@@ -23,15 +26,42 @@ class InstagramApi {
         });
     }
     
-    getUserFollowers(user_id) {
+    getUserFollowers(options) {
+        const
+            { user_id } = options,
+            url = options.next_url ? options.next_url : `https://api.instagram.com/v1/users/${user_id}/followed-by?access_token=${this.token}`;
+                
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: `https://api.instagram.com/v1/users/${user_id}/followed-by?access_token=${this.token}`,
+                url,
                 type: 'get',
                 dataType: 'jsonp',
                 success: r => {
                     console.log(r);
-                    resolve(r.data);
+                    resolve({
+                        data: r.data,
+                        pagination: r.pagination
+                    });
+                }
+            });
+        });
+    }
+    
+    getUserFollows(options) {
+        const
+            { user_id } = options,
+            url = options.next_url ? options.next_url : `https://api.instagram.com/v1/users/${user_id}/follows?access_token=${this.token}`;;
+        
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url,
+                type: 'get',
+                dataType: 'jsonp',
+                success: r => {
+                    resolve({
+                        data: r.data,
+                        pagination: r.pagination
+                    });
                 }
             });
         });

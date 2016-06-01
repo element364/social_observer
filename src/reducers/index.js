@@ -8,8 +8,10 @@
  */
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
+import { userInfoReducer } from './userInfoReducer';
 /* Populated by react-webpack-redux:reducer */
 const reducers = {
     routing: routerReducer,
+    user_info: userInfoReducer
 };
 module.exports = combineReducers(reducers);
