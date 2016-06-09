@@ -51,28 +51,55 @@ class User extends Component {
         
     render() {
         let { user_id } = this.props.params,
-            redirectUrl = encodeURIComponent('http://localhost:8000/#/instagram_auth');
+            instagramAuthUrl = this.instagramApi.getAuthUrl();
         
-        const instagramAuthUrl = `https://api.instagram.com/oauth/authorize/?client_id=${this.instagramApi.clientId}&amp;redirect_uri=${redirectUrl}&amp;response_type=token&scope=basic+likes+relationships+comments`;
+        
+        
+        const followsHash = this.props.follows.reduce((hash, follow) => {
+            hash[follow.id] = follow;
+            return hash;
+        }, {});
+        
+        const followedByHash = this.props.followed_by.reduce((hash, follower) => {
+            hash[follower.id] = follower;
+            return hasn;
+        }, {});
+        
+        console.log('followsHash');
+        console.log(followsHash);
+        
+        console.log('followedByHash');
+        console.log(followedByHash);
         
         var users = [{
             id: Number(this.props.user.id),
             username: this.props.user.username,
             profile_picture: this.props.user.profile_picture
-        }].concat(this.props.followed_by.map(follower => ({
+        }].concat(this.props.follows.map(follow =>({
+            id: Number(follow.id),
+            username: follow.username,
+            profile_picture: follow.profile_picture
+        }))),
+        connections = this.props.follows.map(follow => ({
+            from: Number(this.props.user.id),
+            to: Number(follow.id),
+            arrows: 'to'
+        }));
+        
+        /*
+        .concat(this.props.followed_by.map(follower => ({
             id: Number(follower.id),
             username: follower.username,
             profile_picture: follower.profile_picture
-        }))),
-        connections = this.props.followed_by.map(follower => ({
+        })))
+        */
+        /*
+        this.props.followed_by.map(follower => ({
             from: Number(follower.id),
             to: Number(this.props.user.id),
             arrows: 'to'
-        })).concat(this.props.follows.map(follow => ({
-            from: Number(this.props.user.id),
-            to: Number(follow.id),
-            arrow: 'from'
-        })));
+        }))
+        */
     
         return (
             <div className="container-fluid">

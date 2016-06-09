@@ -3,10 +3,18 @@ import moment from 'moment';
 
 class InstagramApi {
     constructor() {
-        this.clientId = '56b5e75fc8124dfba12aa25af2faae18';
-        this.clientSecret = 'e1c3bfd6dfb7422ba4d9532b6eca1339';
+        this.clientId = 'e1c0c5ca4781431897c70a47b79a8c4e';
+        this.clientSecret = '4e3075da7678499eb4a802b31251ef87';
         
         this.token = '';
+    }
+    
+    getAuthUrl() {
+        const
+            redirectUrl = encodeURIComponent('http://localhost:8000/#/instagram_auth'),
+            instagramAuthUrl = `https://api.instagram.com/oauth/authorize/?client_id=${this.clientId}&amp;redirect_uri=${redirectUrl}&amp;response_type=token&scope=basic+public_content+follower_list+comments+relationships+likes`;
+            
+        return instagramAuthUrl;
     }
     
     getUserInfo(options) {
@@ -77,7 +85,8 @@ class InstagramApi {
                     lat, lng,
                     max_timestamp,
                     distance: 800,
-                    client_id: this.clientId
+                    client_id: this.clientId,
+                    access_token: this.token
                 },
                 type: 'get',
                 dataType: 'jsonp',

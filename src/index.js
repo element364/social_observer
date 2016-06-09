@@ -6,7 +6,8 @@ import { Router, Route, hashHistory } from 'react-router';
 import configureStore from './stores';
 import RealtimeCheckins from './components/pages/RealtimeCheckins/RealtimeCheckins.jsx';
 import HistoryCheckins from './components/pages/HistoryCheckins/HistoryCheckins.jsx';
-import User from './components/pages/User/User.jsx';
+import UserInst from './components/pages/UserInst/UserInst.jsx';
+import UserVk from './components/pages/UserVk/UserVk.jsx';
 import InstagramAccessToken from './components/pages/InstagramAccessToken/InstagramAccessToken.jsx';
 
 const store = configureStore();
@@ -19,7 +20,8 @@ render(
         <Router history={history}>
             <Route path="/realtime_checkins" component={RealtimeCheckins} />
             <Route path="/access_token=:token" component={InstagramAccessToken} />
-            <Route path="/user/:user_id" component={User} />
+            <Route path="/user_inst/:user_id" component={UserInst} />
+            <Route path="/user_vk/:user_id" component={UserVk} />
             <Route path="/" component={HistoryCheckins} />
         </Router>
     </Provider>,

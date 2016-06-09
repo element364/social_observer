@@ -9,9 +9,11 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { userInfoReducer } from './userInfoReducer';
+import { userVkReducer } from './userVkReducer';
 /* Populated by react-webpack-redux:reducer */
 const reducers = {
     routing: routerReducer,
-    user_info: userInfoReducer
+    user_info: userInfoReducer,
+    user_vk: userVkReducer
 };
 module.exports = combineReducers(reducers);

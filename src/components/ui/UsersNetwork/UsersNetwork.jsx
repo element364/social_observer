@@ -27,6 +27,9 @@ class UsersNetwork extends Component {
     }
     
     componentWillReceiveProps(newProps) {
+        console.log('componentWillReceiveProps');
+        console.log(newProps);
+        
         this.network.setData({
             nodes: map(newProps.users, user => ({
                 id: Number(user.id),

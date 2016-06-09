@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { Map, Marker, Popup, TileLayer, Circle } from 'react-leaflet';
 import FontAwesome from 'react-fontawesome';
+import cookie from 'react-cookie';
 import InstagramApi from '../../../utils/instagramApi';
 
 require('./history-checkin.less');
@@ -18,6 +19,7 @@ class HistoryCheckins extends Component {
         };
         
         this.instagramApi = new InstagramApi();
+        this.instagramApi.token = cookie.load('instagramToken');
     }
     
     searchInstagramCheckins = (lat, lng, max_timestamp) => {
@@ -60,11 +62,17 @@ class HistoryCheckins extends Component {
     }
     
     render() {
-        const { currentPosition, selectedLocation, checkins } = this.state;
+        const
+            { currentPosition, selectedLocation, checkins } = this.state,
+            instagramAuthUrl = this.instagramApi.getAuthUrl();
         
         return (
             <div className="container-fluid">
+                <a href={instagramAuthUrl}>Login Instagram</a>
+                &nbsp;
                 <Link to="/realtime_checkins">Realtime checkins</Link>
+                &nbsp;
+                <Link to="/user_vk/101">Vk</Link>
                 <div className="row">
                     <div className="leaflet-container">
                         History checkins
@@ -115,7 +123,7 @@ class HistoryCheckins extends Component {
                                                 style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)' }}
                                             />
                                         </div>
-                                        <h4><Link to={`/user/${checkin.user_id}`}>{checkin.user_name}</Link></h4>
+                                        <h4><Link to={`/user_inst/${checkin.user_id}`}>{checkin.user_name}</Link></h4>
                                     </div>
                                     <div className="row" style={{ textAlign: 'center' }}>
                                         <img className="img-circle" style={{ maxWidth: '80%' }} src={checkin.user_image_url} />
